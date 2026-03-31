@@ -11,6 +11,67 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        limparPastaFrames();
+
+        BufferedImage img = ImageIO.read(new File("imagens/coracao.png"));
+
+        int escolhaEstrutura = escolherEstrutura();
+        int[] posicao = escolherPosicao();
+
+        int x = posicao[0];
+        int y = posicao[1];
+
+        int corOriginal = img.getRGB(x, y);
+        int novaCor = new Color(255, 0, 0).getRGB();
+
+        contador = 0;
+        frame = 0;
+
+        Estrutura<Ponto> estrutura;
+        if (escolhaEstrutura == 0) {
+            estrutura = new PilhaAdapter<>();
+        } else {
+            estrutura = new FilaAdapter<>();
+        }
+
+        floodFill(img, x, y, corOriginal, novaCor, estrutura);
+
+        ImageIO.write(img, "png", new File("resultado.png"));
+        JOptionPane.showMessageDialog(null, "Processo concluído!");
+    }
+
+    public static void floodFill(
+            BufferedImage img,
+            int x,
+            int y,
+            int corOriginal,
+            int novaCor,
+            Estrutura<Ponto> estrutura) {
+
+        estrutura.adicionar(new Ponto(x, y));
+
+        while (!estrutura.estaVazia()) {
+
+            Ponto p = estrutura.remover();
+
+            int px = p.getX();
+            int py = p.getY();
+
+            if (px < 0 || py < 0 || px >= img.getWidth() || py >= img.getHeight()) continue;
+            if (img.getRGB(px, py) != corOriginal) continue;
+
+            img.setRGB(px, py, novaCor);
+            salvarFrame(img);
+
+            estrutura.adicionar(new Ponto(px + 1, py));
+            estrutura.adicionar(new Ponto(px - 1, py));
+            estrutura.adicionar(new Ponto(px, py + 1));
+            estrutura.adicionar(new Ponto(px, py - 1));
+        }
+    }
+
+
+    public static void limparPastaFrames() {
         File pastaFrames = new File("frames");
 
         if (pastaFrames.exists()) {
@@ -23,95 +84,41 @@ public class Main {
         } else {
             pastaFrames.mkdir();
         }
-
-        BufferedImage img = ImageIO.read(new File("imagens/coracao.png"));
-
-        String[] opcoesEstrutura = {"Pintar por Pilha", "Pintar por Fila"};
-        int escolhaEstrutura = JOptionPane.showOptionDialog(
-                null, "Escolha o tipo de preenchimento:",
-                "Flood Fill", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE, null,
-                opcoesEstrutura, opcoesEstrutura[0]);
-
-        String[] opcoesPosicao = {"Dentro do coração", "Fora do coração"};
-        int escolhaPosicao = JOptionPane.showOptionDialog(
-                null, "Onde deseja começar?",
-                "Posição inicial", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE, null,
-                opcoesPosicao, opcoesPosicao[0]);
-
-        int x, y;
-
-        if (escolhaPosicao == 0) {
-            x = 512;
-            y = 512;
-        } else {
-            x = 50;
-            y = 50;
-        }
-
-        int corOriginal = img.getRGB(x, y);
-        int novaCor = new Color(255, 0, 0).getRGB();
-
-        contador = 0;
-        frame = 0;
-
-        if (escolhaEstrutura == 0) {
-            floodFillPilha(img, x, y, corOriginal, novaCor);
-        } else {
-            floodFillFila(img, x, y, corOriginal, novaCor);
-        }
-
-        ImageIO.write(img, "png", new File("resultado.png"));
-
-        JOptionPane.showMessageDialog(null, "Processo concluído!");
     }
 
-    public static void floodFillPilha(BufferedImage img, int x, int y, int corOriginal, int novaCor) {
-        MinhaPilha<Ponto> pilha = new MinhaPilha<>();
-        pilha.push(new Ponto(x, y));
+    public static int escolherEstrutura() {
+        String[] opcoes = {"Pintar por Pilha", "Pintar por Fila"};
 
-        while (!pilha.estaVazia()) {
-            Ponto p = pilha.pop();
-            int px = p.getX();
-            int py = p.getY();
-
-            if (px < 0 || py < 0 || px >= img.getWidth() || py >= img.getHeight()) continue;
-
-            if (img.getRGB(px, py) != corOriginal) continue;
-
-            img.setRGB(px, py, novaCor);
-
-            salvarFrame(img);
-
-            pilha.push(new Ponto(px + 1, py));
-            pilha.push(new Ponto(px - 1, py));
-            pilha.push(new Ponto(px, py + 1));
-            pilha.push(new Ponto(px, py - 1));
-        }
+        return JOptionPane.showOptionDialog(
+                null,
+                "Escolha o tipo de preenchimento:",
+                "Flood Fill",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                opcoes,
+                opcoes[0]
+        );
     }
 
-    public static void floodFillFila(BufferedImage img, int x, int y, int corOriginal, int novaCor) {
-        MinhaFila<Ponto> fila = new MinhaFila<>();
-        fila.enqueue(new Ponto(x, y));
+    public static int[] escolherPosicao() {
+        String[] opcoes = {"Dentro do coração", "Fora do coração"};
 
-        while (!fila.estaVazia()) {
-            Ponto p = fila.dequeue();
-            int px = p.getX();
-            int py = p.getY();
+        int escolha = JOptionPane.showOptionDialog(
+                null,
+                "Onde deseja começar?",
+                "Posição inicial",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                opcoes,
+                opcoes[0]
+        );
 
-            if (px < 0 || py < 0 || px >= img.getWidth() || py >= img.getHeight()) continue;
-
-            if (img.getRGB(px, py) != corOriginal) continue;
-
-            img.setRGB(px, py, novaCor);
-
-            salvarFrame(img);
-
-            fila.enqueue(new Ponto(px + 1, py));
-            fila.enqueue(new Ponto(px - 1, py));
-            fila.enqueue(new Ponto(px, py + 1));
-            fila.enqueue(new Ponto(px, py - 1));
+        if (escolha == 0) {
+            return new int[]{512, 512};
+        } else {
+            return new int[]{50, 50};
         }
     }
 
