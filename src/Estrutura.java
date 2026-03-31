@@ -1,5 +1,5 @@
 public interface Estrutura<T> {
-    void adicionar(T valor);   // push / enqueue
-    T remover();               // pop / dequeue
+    void adicionar(T valor);
+    T remover();
     boolean estaVazia();
 }

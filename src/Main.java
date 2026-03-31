@@ -2,18 +2,26 @@ import java.awt.image.BufferedImage;
 import java.awt.Color;
 import javax.imageio.ImageIO;
 import java.io.File;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Main {
 
     static int contador = 0;
     static int frame = 0;
+    static JLabel label;
 
     public static void main(String[] args) throws Exception {
 
         limparPastaFrames();
 
         BufferedImage img = ImageIO.read(new File("imagens/coracao.png"));
+
+        JFrame janela = new JFrame("Flood Fill");
+        label = new JLabel(new ImageIcon(img));
+        janela.add(label);
+        janela.pack();
+        janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        janela.setVisible(true);
 
         int escolhaEstrutura = escolherEstrutura();
         int[] posicao = escolherPosicao();
@@ -28,16 +36,26 @@ public class Main {
         frame = 0;
 
         Estrutura<Ponto> estrutura;
+
         if (escolhaEstrutura == 0) {
             estrutura = new PilhaAdapter<>();
         } else {
             estrutura = new FilaAdapter<>();
         }
 
-        floodFill(img, x, y, corOriginal, novaCor, estrutura);
+        new Thread(() -> {
 
-        ImageIO.write(img, "png", new File("resultado.png"));
-        JOptionPane.showMessageDialog(null, "Processo concluído!");
+            floodFill(img, x, y, corOriginal, novaCor, estrutura);
+
+            try {
+                ImageIO.write(img, "png", new File("resultado.png"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            JOptionPane.showMessageDialog(null, "Processo concluído!");
+
+        }).start();
     }
 
     public static void floodFill(
@@ -61,6 +79,8 @@ public class Main {
             if (img.getRGB(px, py) != corOriginal) continue;
 
             img.setRGB(px, py, novaCor);
+
+            atualizarTela(img);
             salvarFrame(img);
 
             estrutura.adicionar(new Ponto(px + 1, py));
@@ -70,6 +90,15 @@ public class Main {
         }
     }
 
+    public static void atualizarTela(BufferedImage img) {
+        try {
+            label.setIcon(new ImageIcon(img));
+            label.repaint();
+            Thread.sleep(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void limparPastaFrames() {
         File pastaFrames = new File("frames");

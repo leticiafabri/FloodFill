@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="40d32b1e-6c9a-413f-9207-3b6c31e67fca" name="Changes" comment="criando as classes iniciais">
-      <change afterPath="$PROJECT_DIR$/src/Estrutura.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/FilaAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/PilhaAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Estrutura.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Estrutura.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,13 +17,13 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -33,12 +31,12 @@
     &quot;assignee&quot;: &quot;leticiafabri&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/leticiafabri/FloodFill",
-    "accountId": "22610b0d-038d-4df5-8d5b-200dad290436"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/leticiafabri/FloodFill.git&quot;,
+    &quot;accountId&quot;: &quot;98fd3e16-4be8-444c-b296-f96ac4d06557&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
